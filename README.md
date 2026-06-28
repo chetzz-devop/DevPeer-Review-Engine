@@ -80,13 +80,4 @@ Developer API enables registered users to create, update, delete, and list devel
 - Filtering, ordering, and pagination
 - Secure API patterns and Django middleware
 
-## HR-Focused Summary
 
-Built a production-oriented backend API for developer portfolio management with strong authentication, authorization, and validation practices. Demonstrated practical experience in Django, REST API architecture, and secure token-based access control.
-
-## Resume-Ready Bullets
-
-- Developed a Django REST Framework API for project portfolio management and peer reviews using JWT authentication, custom authorization, and validation rules.
-- Implemented owner-only project editing, review rating enforcement, and project URL validation.
-- Added filtering, ordering, and paginated API responses for scalable data retrieval.
-- Modeled relational data in Django ORM and registered core models in the admin interface.
