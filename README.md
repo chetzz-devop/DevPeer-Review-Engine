@@ -1,90 +1,92 @@
-DevPeer API
-DevPeer API is a production-grade, secure RESTful backend engine designed for a developer portfolio and peer-evaluation network. It allows software engineers to create profiles, showcase their projects with validated links, and receive authenticated, structured peer reviews and star ratings.
+# Developer API
 
-🚀 Core Features
-Secure Authentication: Integrated SimpleJWT (JSON Web Tokens) to secure endpoints and manage user sessions.
+A Django REST Framework backend for managing developer portfolio projects and peer reviews.
 
-Dual-Layer Data Integrity: Built-in validators at both the Serializer and Database levels to ensure rigorous input validation.
+## Project Overview
 
-Anti-Gaming Logic: Custom object-level validation preventing users from reviewing or rating their own projects.
+Developer API enables registered users to create, update, delete, and list developer projects, while allowing authenticated users to submit peer reviews and ratings. The system enforces owner-only edit/delete permissions and prevents users from reviewing their own projects.
 
-Optimized Database Queries: Modeled relational database architectures utilizing Django ORM reverse lookups (related_name) to minimize query overhead.
+## Technology Stack
 
-Advanced Query Performance: Support for text search, multi-field filtering, and custom ordering parameters out of the box.
+- Python 3
+- Django 6.0.6
+- Django REST Framework
+- djangorestframework-simplejwt
+- django-filter
+- SQLite3
+- JWT authentication + Session authentication
 
-🛠️ Tech Stack
-Framework: Django 6.0 & Django REST Framework (DRF)
+## Core Features
 
-Authentication: JWT (Django REST Framework SimpleJWT)
+- Full CRUD operations for `Project` objects
+- Peer review submission with rating limits (1-5 stars)
+- JWT access and refresh token authentication
+- Session authentication fallback
+- Owner-only modification via custom permission class
+- Project URL validation on submission
+- Filtering by project title and ordering support
+- Global pagination with 5 items per page
+- Admin registration for Project, Profile, and Review models
 
-Database: SQLite3 (Development) / Production-ready for PostgreSQL
+## Data Models
 
-Language: Python 3.14+
+- `Profile` — extends Django `User` with bio information
+- `Project` — stores project owner, title, and project link
+- `Review` — stores review author, project, comment, and rating value
 
-📂 Database Architecture
-The API uses a highly structured relational schema to maintain strict data consistency:
+## API Endpoints
 
-User ↔ Profile: OneToOneField mapping ensures every registered user has exactly one developer profile.
+- `POST /api/token/` — obtain JWT access and refresh tokens
+- `POST /api/token/refresh/` — refresh an access token
+- `GET /dev/` — list projects
+- `POST /dev/` — create a new project
+- `GET /dev/<id>/` — retrieve project details
+- `PUT /dev/<id>/` — update a project (owner only)
+- `DELETE /dev/<id>/` — delete a project (owner only)
+- `POST /dev/review/` — submit a review for a project
+### Screen Shots 
+<img width="1915" height="952" alt="Screenshot 2026-06-23 175307" src="https://github.com/user-attachments/assets/f51a45d4-51f1-4b14-9e91-a183728c776d" />
+<img width="1918" height="987" alt="Screenshot 2026-06-23 175356" src="https://github.com/user-attachments/assets/a88d493b-0a6c-47e3-925f-fd7d3fc81534" />
 
-Profile ↔ Project: One-to-Many (ForeignKey) relationship mapping a developer to their portfolio submissions.
+## Setup
 
-Profile/Project ↔ Review: Many-to-One relationships utilizing optimized reverse lookup routing (related_name="reviews").
+1. Open a terminal in the project root.
+2. Activate the Python virtual environment if available:
+   - Windows PowerShell: `& ".venv\Scripts\Activate.ps1"`
+3. Install dependencies:
+   - `pip install django djangorestframework djangorestframework-simplejwt django-filter`
+4. Navigate to the Django project directory:
+   - `cd dev`
+5. Apply migrations:
+   - `python manage.py migrate`
+6. Create a superuser for admin access (optional):
+   - `python manage.py createsuperuser`
+7. Run the development server:
+   - `python manage.py runserver`
 
-🛣️ API Endpoints
-Method	Endpoint	Description	Auth Required
-POST	/api/token/	Obtain JWT Access & Refresh Tokens	No
-POST	/api/token/refresh/	Refresh expired JWT Access Token	No
-GET	/dev/	List all developer projects (Supports search/filter)	No
-POST	/dev/	Submit a new project portfolio	Yes
-GET	/reviews/	View all submitted project reviews and ratings	No
-POST	/reviews/	Submit a star rating and comment on a project	Yes
-🔒 Crucial Business Logic & Rules
-1. Project Link Formatting
-The project_link field uses a strict URLValidator. Input addresses must include the absolute protocol scheme (e.g., https://).
+## Usage Notes
 
-❌ Invalid: www.github.com/username
+- The app currently uses SQLite3 as the database.
+- The API root is served from the top-level URL via `devapp.urls`.
+- Use the admin site at `/admin/` to inspect `Profile`, `Project`, and `Review` records.
 
-✅ Valid: https://www.github.com/username
+## Skills Demonstrated
 
-2. Peer Review Constraints
-The ReviewSerializer evaluates the incoming payload against two key production rules before performing database transactions:
+- Django REST Framework API design
+- JWT authentication and refresh token flows
+- Custom permission classes and object-level authorization
+- Serializer validation and business rule enforcement
+- Model relationships with Django ORM
+- Filtering, ordering, and pagination
+- Secure API patterns and Django middleware
 
-The star rating value must be an integer between 1 and 5.
+## HR-Focused Summary
 
-The author profile ID cannot match the project owner profile ID. Attempting to rate your own work returns a 400 Bad Request with an explicit security validation error.
-#Screen Shots of how project looks like 
+Built a production-oriented backend API for developer portfolio management with strong authentication, authorization, and validation practices. Demonstrated practical experience in Django, REST API architecture, and secure token-based access control.
 
-<img width="1915" height="952" alt="Screenshot 2026-06-23 175307" src="https://github.com/user-attachments/assets/255e0ea2-b45b-4c27-8790-88c9c0cba673" />
-<img width="1918" height="983" alt="Screenshot 2026-06-23 175318" src="https://github.com/user-attachments/assets/f65ba017-fe6f-46e3-9801-9adf65df9911" />
-<img width="1918" height="987" alt="Screenshot 2026-06-23 175356" src="https://github.com/user-attachments/assets/56bb8b41-466b-42a9-b1c9-0dee48cc99ee" />
+## Resume-Ready Bullets
 
-
-
-
-
-⚙️ Setup & Installation
-Clone the repository:
-
-Bash
-git clone https://github.com/yourusername/devpeer-api.git
-cd devpeer-api
-Set up a virtual environment and install dependencies:
-
-Bash
-python -m venv venv
-# On Windows:
-venv\Scripts\activate
-# On Mac/Linux:
-source venv/bin/activate
-
-pip install django djangorestframework djangorestframework-simplejwt django-filter
-Run database migrations:
-
-Bash
-python manage.py makemigrations
-python manage.py migrate
-Start the local development server:
-
-Bash
-python manage.py runserver
-The API will be locally accessible at http://127.0.0.1:8000/.
+- Developed a Django REST Framework API for project portfolio management and peer reviews using JWT authentication, custom authorization, and validation rules.
+- Implemented owner-only project editing, review rating enforcement, and project URL validation.
+- Added filtering, ordering, and paginated API responses for scalable data retrieval.
+- Modeled relational data in Django ORM and registered core models in the admin interface.
